@@ -1,5 +1,5 @@
 // IMPORTANT: Change this to your Render URL after deploying backend!
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://code-snippet-vault-pe5g.onrender.com/api";
 
 let isLoginMode = true;
 let allSnippets = [];
