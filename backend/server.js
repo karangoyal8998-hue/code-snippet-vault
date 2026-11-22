@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -65,10 +64,7 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ message: "Username already taken" });
     }
 
-    // Encrypt password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({ username, password: hashedPassword });
+   const newUser = new User({ username, password });
     await newUser.save();
 
     res.status(201).json({ message: "Registration successful! Please login." });
@@ -87,11 +83,10 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // Compare entered password with hashed password in DB
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Wrong password" });
-    }
+   
+    if (password !== user.password) {
+  return res.status(400).json({ message: "Wrong password" });
+}
 
     // Create JWT token valid for 1 day
     const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
